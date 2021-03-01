@@ -1,13 +1,20 @@
 const CustomError = require("../extensions/custom-error");
 
 class VigenereCipheringMachine {
+  constructor (mode = true) {
+    this.mode = mode;
+  }
   encrypt(message, key) {
     if (message === undefined || key === undefined)
       throw new Error("No one of parameters");
-    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    let alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     let fullKey = "";
     message = message.toUpperCase();
     key = key.toUpperCase();
+    if (this.mode === false) {
+      message = message.split('').reverse().join('');
+      key = key.split('').reverse().join('');
+    }
     for (let cur = 0; key.length < message.length; cur++) {
       key += key[cur];
     }
@@ -27,14 +34,21 @@ class VigenereCipheringMachine {
         alphabet.length;
       fullKey += alphabet[c];
     }
+
     return fullKey;
+
   }
+
   decrypt(encryptedMessage, key) {
     if (encryptedMessage === undefined || key === undefined)
       throw new Error("No one of parameters");
     const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     let fullKey = "";
     key = key.toUpperCase();
+    if (this.mode === false) {
+      encryptedMessage = encryptedMessage.split('').reverse('').join('');
+      key = key.split('').reverse('').join('');
+    }
     for (let cur = 0; key.length < encryptedMessage.length; cur++) {
       key += key[cur];
     }
@@ -57,6 +71,7 @@ class VigenereCipheringMachine {
       fullKey += alphabet[m];
     }
     return fullKey;
+
   }
 }
 
